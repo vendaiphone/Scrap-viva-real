@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Consulta de Imóveis</title>
+</head>
+<body>
+  <h1>Buscar Preço Médio de Imóveis</h1>
+  <form id="searchForm">
+    <label for="cidade">Cidade:</label>
+    <input type="text" id="cidade" required><br>
+
+    <label for="estado">Estado:</label>
+    <input type="text" id="estado" required><br>
+
+    <label for="bairro">Bairro:</label>
+    <input type="text" id="bairro" required><br>
+
+    <label for="metragem">Metragem:</label>
+    <input type="number" id="metragem" required><br>
+
+    <label for="tipo">Tipo:</label>
+    <select id="tipo" required>
+      <option value="casa">Casa</option>
+      <option value="apartamento">Apartamento</option>
+      <option value="terreno">Terreno</option>
+    </select><br>
+
+    <button type="submit">Buscar</button>
+  </form>
+
+  <div id="resultado" style="margin-top:20px;"></div>
+
+  <script>
+    const form = document.getElementById("searchForm");
+    const resultado = document.getElementById("resultado");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const dados = {
+        cidade: cidade.value,
+        estado: estado.value,
+        bairro: bairro.value,
+        metragem: parseInt(metragem.value),
+        tipo: tipo.value
+      };
+
+      resultado.innerHTML = "Buscando imóveis...";
+
+      const res = await fetch("/buscar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(dados)
+      });
+
+      const data = await res.json();
+
+      if (data.erro) {
+        resultado.innerHTML = `<strong>Erro:</strong> ${data.erro}`;
+      } else {
+        resultado.innerHTML = `
+          <p><strong>Média total:</strong> R$ ${data.media_valor_total.toLocaleString()}</p>
+          <p><strong>Valor médio por m²:</strong> R$ ${data.media_valor_m2.toFixed(2)}</p>
+        `;
+      }
+    });
+  </script>
+</body>
+</html>
