@@ -1,12 +1,15 @@
+# scraper.py
+
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 import time
 
-def buscar_imoveis(cidade, estado, bairro, metragem, tipo):
+def buscar_imoveis(cidade, estado, metragem, tipo):
     margem = 10
     min_m = metragem - margem
     max_m = metragem + margem
+
     tipo_url = {
         "casa": "casa",
         "apartamento": "apartamento",
@@ -18,7 +21,7 @@ def buscar_imoveis(cidade, estado, bairro, metragem, tipo):
     options.add_argument("--disable-gpu")
     driver = webdriver.Chrome(options=options)
 
-    url = f"https://www.vivareal.com.br/venda/{tipo_url[tipo]}/{estado.lower()}/{cidade.lower().replace(' ', '-')}/{bairro.lower().replace(' ', '-')}/?pagina=1"
+    url = f"https://www.vivareal.com.br/venda/{tipo_url[tipo]}/{estado.lower()}/{cidade.lower().replace(' ', '-')}/?pagina=1"
     driver.get(url)
     time.sleep(3)
 
